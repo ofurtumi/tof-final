@@ -148,12 +148,77 @@ gistið `%dl` inniheldur lægstu 8 bita gistsins `edx` og það er verið að at
 > skrifið jafngilda útgáfu a fallinu í C. rökstyðjið einstakar skipanir í forritinu
 ```c
 long f(long n) {
-    if (n < 0) return 0;            // hoppum í l3 ef 
-    int j = 0;
-    for (int i = 0; i < n; i++) {
-        if (!(i & 7)) j += i;
+    long j = 0;                     // frumstillum %eax 
+    if (n <= 0) return 0;           // hoppum í l3 ef 
+    for (int i = 0; i < n; i++) {   // höldum áfram þangað til i er >= n
+        if (!(i & 7)) j += i;       // tékkum á neðstu 3 bitunum
     }
-    return j;
+    return j;                       // skilum loks %eax
 }
 ```
 *ath. ruglaði mig pínu í ríminu þetta `cmove` en það er jafngilt `cmovz` sem meikar strax meiri sens*
+
+# 4
+> hér fyrir neðan eru fjórar stuttar **sjálfstæðar** spurningar um x-86-64 smalamál
+
+## a.
+> útskýrið hver er munurinn á eftirfarandi tveimur x86-64 skipunum. sýnið jafngilda skipun í C
+> - `mov    5, %rax`
+> - `mov    5, (%rax)`
+
+okidoki, fyrri skipunin er að setja töluna `5`  inn í gistið `%rax` sjá c kóða  
+seinni skipunin er að setja `5` inn í minnisvæði `%rax`, dæmi um þetta væri ef tekið er tilvísunarviðfang og unnið með það
+```c
+void fyrri() {
+    int x = 5;  // fyrri skipunin
+}
+
+void seinni(int *x) {
+    *x = 5;
+}
+```
+
+## b.
+> útskýrið nákvæmlega hvað gerist í skipuninni `push %rbx`, þ.e. breytingar á minni og/eða gistum, og í hvaða röð breytingarnar gerast
+
+x-86 skipuning `push` ýtir viðfangi á hlaðann, í þessu tilfelli `%rbx`  
+við það að ýta á hlaðann lækkar gildið í `%esp` hlaðanum um stærð viðfangsins, gildið í `%esp` er minnisaddressa, og síðan er gildið í `%rbx` vistað á minnisvæðinu sem `%esp` heldur í 
+
+## c.
+> segjum að í X forriti sé skilgreind færslan `rec`. 
+```c
+struct rec {
+    int k;
+    short int b[20];
+    float x;
+}
+```
+> gerið ráð fyrir því að í smalamálskóða innihaldi gistið `%rax` bendi á færslu af taginu `rec` og gistið `%rdx` innihaldi heiltöluna `5`. með hliðsjón af því útskýrið hvað gerist í eftirfarandi x86-64 skipun. lýsið tilgangi allra hluta skipuninnar.
+```asm
+movzwq  4(%rax, %rdx, 2), %rbx
+```
+
+útreikningurinn sem verið er að útfæra er `(%rax + %rdx * 2)`, hér er verið að taka bendi á færslu `rec` og bæta við hana `%rdx` mörgum `short` stærðum, að lokum er svo lagt `4` við bendinn til þess að hoppa yfir k  
+ef litið er á alla setninguna í heild er verið að færa `b[5]` í rec sem er orð , með 0-víkkun, yfir í fjórorð (quadword) breytuna  `%rbx`
+
+## d.
+> í C forritum eru `switch` setningar oft útfærðar með hopptöflum (jump table). stundum er þó hagkvæmara að útfæra þær með hreiðruðum `if` setningum. útskýrið hvenær er betra að nota hopptöflu, og hvenær hreiðruð if setning er hagkvæmari. rökstyðjið með einföldum dæmum.
+
+ef verið er að vinna með gögn þar sem allar útkomur eru jafn líklegar er hraðara og hagstæðara að nota switch setningar, þar sem öll gögn töflunar hafa sama aðgangstíma  
+hinsvegar ef verið er að vinna með gögn þar sem einhverjar útkomur eru líklegri en aðrar og útkomurnar eru ekki mikið fleiri en 4-5 er hagstæðara að nota if setningar, þetta er vegna þess að hægt er að setja algengustu útkomurnar efst og fá þessvegna hraðari aðgangstíma inn á þær
+
+# 5
+> í tölvukerfi er skyndiminni sem er 4KB að stærð. það er 4-vítt og hefur 16 mengi
+
+## a.
+> hver er línustærð skyndiminnis
+
+## b.
+> segjum að tölvukerfið hafi 32-vita vistföng. sýnið skiptingu þess í merkishluta (tag, CT), mengisnúmer (set index, CI) og línuhliðrun (block offeset, CO). rökstyðjið svar ykkar!
+
+## c. 
+> segjum að flest forrit hjá okkur noti stór fylki, sem farið er línulega í gegnum. ef við gætum breytt uppsetningu skyndiminnis hér að ofan, **án þess að breyta heildarstærð þess**,væri hagkvæmast að i) hækka víddina, ii) fjölga mengjunum eða iii) auka línustærðina? ræðið kosti þessara þriggja leiða og rökstyðjið hver þeirra væri best fyrir þessa tegund forrita
+
+## d.
+> segjum að í tölvukerfinu sé aðgangstími í aðalminni 100 klukkutif  
+> skyndiminnið sem lýst er hér að ofan hefur aðgangstímann 4 klukkutif með notkun skyndiminnisins þá sýna prófanir að meðalaðganstíminn í tölvukerfinu er 8.8 klukkutif. hvert er smellahlutfallið í prófunum rökstyðjið

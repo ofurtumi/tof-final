@@ -29,21 +29,21 @@ cmove   $1, %rax
 
 þessi kóði færir `1` inn í `%rax` ef neðstu þrír bitar `%dl` eru ekki `111`
 
-| cc     | condition                            | dæmi  |
-| ------ | ------------------------------------ | ----- |
-| o      | overflow                             | cmovo |
-| no     | no overflow                          |
-| b, nae | below, not above or equal            |
-| nb, ae | not below, above or equal            |
-| e, z   | equal (zero)                         |
-| ne, nz | not equal, (not zero)                |
-| na, be | not above, below or equal            |
-| a, nbe | above, not below or equal            |
-| s      | sign                                 |
-| ns     | no sign                              |
-| p      | parity                               |
-| np     | no parity                            |
-| l, nge | less , not greater than or equal |
-| nl     | not less, greater than or equal      |
-| ng, le | not greater, less than or equal      |
-| g, nle | greater, not less than or equal      |
+| cc     | condition                       | dæmi  |
+| ------ | ------------------------------- | ----- |
+| o      | overflow                        | cmovo |
+| no     | no overflow                     |
+| b, nae | below, not above or equal       |
+| nb, ae | not below, above or equal       |
+| e, z   | equal (zero)                    |
+| ne, nz | not equal, (not zero)           |
+| na, be | not above, below or equal       |
+| a, nbe | above, not below or equal       |
+| s      | sign                            |
+| ns     | no sign                         |
+| p      | parity                          |
+| np     | no parity                       |
+| l, nge | less, not greater than or equal |
+| nl     | not less, greater than or equal |
+| ng, le | not greater, less than or equal |
+| g, nle | greater, not less than or equal |
