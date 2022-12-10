@@ -107,3 +107,53 @@ nú, vegna þess að við erum búin að finna `1` þá er ekkert mál að finna
 > hvað eru margir ólíkir bitastrengir sem gefa `NaN` í þessu formi? rökstyðjið
 
 svipað og í dæminu fyrir ofan þá byggist svarið á því hversu margar mismunandi tölur brotastrengurinn getur búið til, nema hvað í þetta skipti er það líka margfaldað með `2` og dregið `2` frá útkomunni vegna þess að `NaN` og `-NaN` eru bæði gild gildi en ef brotastrengurinn er alveg `0` þá er gildið `inf` eða `-inf`, svarið er þessvegna $2*2^5=64$
+
+
+# 3
+> hér fyrir neðan er smalamálsútgáfa fallinu `long f(long n):
+```asm
+f:
+    movl        $0, %eax
+    movl        $0, %edx
+    testq       %rdi, %rdi
+    jle         .L3
+.L7:
+    leaq        (%rax, %rdx), %rcx
+    testb       $7, %dl
+    cmove       %rcx, %rax
+    addq        $1, %rdx
+    cmpq        %rdi, %rdx
+    jne         .L7
+.L3:
+    ret
+```
+
+## a.
+> upphaflega C-útgáfan af fallinu hefur for-lykkju. i) hvar er hún í kóðanum að ofan? ii) útskýrið tilgang einstakra gista í tengslum við for-lykkjuna
+
+for lykkjan er í `.L7`  
+það er farið inn í hana ef inntaks gistinn `%rdi` er stærri en `0`, við erum með tvö frumstillt gisti `%eax` og `%edx`  
+
+`%eax` er skilagildið okkar, fyrir hvert loop inniheldur það `%rax` plús `%rdx` en aðeins ef neðstu 3 bitar í `%rdx` eru jafnt og `7`
+
+`%edx` er counter inn í for lykkjunni, það sést greinilega í línu `#8` þegar bætt er 1 við gistið,for lykkjan stoppar þegar `%edx` og `%rdi` hafa sama gildi  
+
+
+## b.
+> í kóðanum að ofan er skipunin `testb $7, dl` hvað gerist í henni og hver er tilgangur hennar?
+
+gistið `%dl` inniheldur lægstu 8 bita gistsins `edx` og það er verið að athuga hvort lægstu bitarnir séu jafngildir `7` í tíundarkerfi þ.e. `00000111`, ef svo er þá á að færa `%rcx` inn í `%rax`
+
+## c.
+> skrifið jafngilda útgáfu a fallinu í C. rökstyðjið einstakar skipanir í forritinu
+```c
+long f(long n) {
+    if (n < 0) return 0;            // hoppum í l3 ef 
+    int j = 0;
+    for (int i = 0; i < n; i++) {
+        if (!(i & 7)) j += i;
+    }
+    return j;
+}
+```
+*ath. ruglaði mig pínu í ríminu þetta `cmove` en það er jafngilt `cmovz` sem meikar strax meiri sens*
