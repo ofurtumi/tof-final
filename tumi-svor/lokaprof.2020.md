@@ -222,3 +222,47 @@ hinsvegar ef verið er að vinna með gögn þar sem einhverjar útkomur eru lí
 ## d.
 > segjum að í tölvukerfinu sé aðgangstími í aðalminni 100 klukkutif  
 > skyndiminnið sem lýst er hér að ofan hefur aðgangstímann 4 klukkutif með notkun skyndiminnisins þá sýna prófanir að meðalaðganstíminn í tölvukerfinu er 8.8 klukkutif. hvert er smellahlutfallið í prófunum rökstyðjið
+
+# 6
+> hér fyrir neðan er C fallið `fall`:
+```c
+int N = 10;
+
+int **fall() {
+    int **a = (int**)malloc(N*sizeof(int));
+    int i;
+    for (i=0; i<N; i++)
+        *a[i]=i;
+    return a
+}
+```
+![](pics/2022-12-10-16-32-42.png)
+
+## a.
+> hér fyrir ofan er mynd af minnissvæðum notendaforrita í linux. fyrir eftirfanadi tákn/breytur í forritinu að ofan, segið í hvaða minnissvæði þau eru geymd:
+> - N
+> - fall
+> - a
+> - minnið sem a bendir á
+> - i
+
+> gerið ráð fyrir því að allar breytur séu geymdar í minni, ekki í gistum. rökstyðjið svörin í nokkrum orðum
+
+- N, verandi frumstillt víðvær breyta er geymd í `.data` svæðinu
+- fall, geymt, ásamt öllum öðrum kóða, í óyfirskrifanlega svæðinu `.text`
+- a, er staðvær breyta innan falls þannig geymt á hlaðanum
+- minnið sem a bendir á, er tekið frá af malloc og þessvegna geymt á kös
+- i, eins og a er staðvær breyta innan falls þannig geymd á hlaða
+
+## b.
+> útskýrið tag og innihald breytanna N, a og i **rétt áður en for skipunin er framkvæmd**. þið getið rissað upp mynd eða útskýrt í orðum
+
+- N er heiltala af taginu `int`, hún tekur upp `32` bita eða `4` bæti af minni og hefur gildið `10`
+- a er bendir á heiltölu fylki, `integer array`, fylkið sem a bendir á getur haldið 10 heiltölum
+- i er heiltölubreyta skilgreind inn í fallinu og er því geymd á hlaða
+
+## c.
+> það eru tvær slæmar minnisvillur í þessu falli. bendið á þær, útskýrið hvert vandamálin eru og stingið uppá lagfæringu á þeim
+
+fyrsta minnisvillan sem ég sé er að það er verið skila bendi á gildi sem eru ekki til lengur, i er skilgreint á hlaða og gildin sem sett eru inn í fylkið sem a bendir á eru því ekki lengur til eftir keyrslu fallsins, held ég 🤷
+

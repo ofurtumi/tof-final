@@ -19,6 +19,11 @@ progs/s1.2020 3     # keyrir með n = 3
 það eina sem er komið á þessum tíma er fyrstu tvær spurningar úr [lokaprófi 2020](lokaprof.2020.md)
 
 # hlutir til að setja á glósublað
+- sterk / veik globala variable
+- minnisfjöll
+- ram töflurnar
+
+
 ## conditional codes
 þessir kóðar fara á endann á `cmov` skipunum þ.e. `cmov--` í línu eftir að eitthvað er testað eins og í dæmi
 ```asm
@@ -29,9 +34,9 @@ cmove   $1, %rax
 
 þessi kóði færir `1` inn í `%rax` ef neðstu þrír bitar `%dl` eru ekki `111`
 
-| cc     | condition                       | dæmi  |
-| ------ | ------------------------------- | ----- |
-| o      | overflow                        | cmovo |
+| cc     | condition                       |
+| ------ | ------------------------------- | 
+| o      | overflow                        | 
 | no     | no overflow                     |
 | b, nae | below, not above or equal       |
 | nb, ae | not below, above or equal       |
@@ -47,3 +52,26 @@ cmove   $1, %rax
 | nl     | not less, greater than or equal |
 | ng, le | not greater, less than or equal |
 | g, nle | greater, not less than or equal |
+
+## minnissvæði
+- `.text` - kóði og föll
+  - hér eru öll föll geymd, svæðið er óyfirskrifanlegt svo að kóðinn geti ekki breytt sjálfum sér
+- `.bss` - inniheldur ófrumstilltar breytur, (*uninitialized variables*)
+  - ófrumstilltar víðværar breytur, (*global vars*), þar á meðal
+    - bendar (*pointers*)
+    - fastar (*constants*)
+  - ófrumstilltar staðværar breytur, (*local static vars*) 
+  - breytur hér eru **veikar**
+  - **ath.** víðværar breytur, frumstilltar sem `0` eða `NULL` fara samt í `.bss`
+- `.data` - inniheldur frumstilltar breytur
+  - frumstilltar víðværar breytur, þar á meðal
+    - bendar
+    - fastar
+  - frumstilltar staðværar breytur
+  - **breytur hér eru sterkar**
+- hlaði (*stack*) - breytur innan falla
+  - staðværar breytur inn í falli, þar á meðal bendar
+  - fallsviðföng (*function arguments*)
+  - vendisvistfang (*return address)
+- kös (*heap*) - minni on demand
+  - minni úthlutað af `malloc`, `calloc` eða `realloc`
