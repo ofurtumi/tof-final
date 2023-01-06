@@ -1,33 +1,12 @@
-tölvutækni og forritun - samantekt og glósur
+---
+mainfont: /tmp/Virgil.woff2
 ---
 
-# gömul próf
-ætla fara í gegnum gömul próf og reyna að svara öllu, ég vísa stundum í forrit til þess að prufa útkomur úr gefnum föllum
-## dæmi um keyrslu
-```bash
-# þýða
-gcc progs/s1.2020.c -o progs/s1.2020
-
-#keyra
-progs/s1.2020       # keyrir með "default" gildi, held það sé 146
-
-#eða
-
-progs/s1.2020 3     # keyrir með n = 3
-```
-
-það eina sem er komið á þessum tíma er fyrstu tvær spurningar úr [lokaprófi 2020](lokaprof.2020.md)
-
-# hlutir til að setja á glósublað
-- sterk / veik globala variable
-- minnisfjöll
-- ram töflurnar
-
-
-## assembly
-### uppbrot gistis
+# assembly
+## uppbrot gistis
 ![uppbrot](pics/gistabrot.excalidraw.png)  
-### algengar skipanir
+
+## algengar skipanir
 | skipun     | argument | lýsing                                                                                     |
 | ---------- | -------- | ------------------------------------------------------------------------------------------ |
 | mov        | x, y     | færir úr x yfir í y, *sjá conditional move fyrir neðan*                                    |
@@ -45,14 +24,14 @@ progs/s1.2020 3     # keyrir með n = 3
 
 *ath. `SHL` og `SAL` gera það sama en `SHR` virkar ekki með signed int eins og `SAR` gerir*
 
-### algeng mynstur
+## algeng mynstur
 | mynstur               | skýring                                                                                    |
 | --------------------- | ------------------------------------------------------------------------------------------ |
 | testl %edi, %edi      | logical andað `edi` við `edi` þannig ef edi <= 0 er hægt að cmove eða jc í samræmi við það |
 | cmove $5, %eax        | færðu 5 inn í `eax` ef z-flaggið er sett sem `1` þ.e. ef `edi` er tómt                     |
 | leal 0(%rdi, %rdi, 4) | margfaldar %rdi með 5, (x + 4 * x)                                                         |
 
-### conditional codes
+## conditional codes
 þessir kóðar fara á endann á `cmov` skipunum þ.e. `cmov--` í línu eftir að eitthvað er testað eins og í dæmi
 ```asm
 testb   $7, %dl
@@ -81,8 +60,8 @@ cmove   $1, %rax
 | ng, le | not greater, less than or equal |
 | g, nle | greater, not less than or equal |
 
-## minnissvæði
-- `.text` - kóði og föll
+# minnissvæði
+<!-- - `.text` - kóði og föll
   - hér eru öll föll geymd, svæðið er óyfirskrifanlegt svo að kóðinn geti ekki breytt sjálfum sér
 - `.bss` - inniheldur ófrumstilltar breytur, (*uninitialized variables*)
   - ófrumstilltar víðværar breytur, (*global vars*), þar á meðal
@@ -102,7 +81,11 @@ cmove   $1, %rax
   - fallsviðföng (*function arguments*)
   - vendisvistfang (*return address)
 - kös (*heap*) - minni on demand
-  - minni úthlutað af `malloc`, `calloc` eða `realloc`
+  - minni úthlutað af `malloc`, `calloc` eða `realloc` -->
+
+![minni](pics/minni.excalidraw.png)
+
+> ath. global breytur sem eru skilgreindar sem `0` eða `NULL` eru líka í `.bss`
 
 # sýndarminni
 - sýndarvistföng: `a` bitar
@@ -118,4 +101,18 @@ við erum með sýndarvistfang sem er `16` bitar sem skiptast í `4` mengi
 **TBLT** og **TLBI** eru skipting á **VPN** þar sem **TBLI** eru neðstu tveir, *LSB*, bitar **VPN** og **TBLT** restin  
 raunvistföngin eru jafn löng og **TLBT** og skipt niður í tvo hluta **PPN** og **PPO**, sem er jafn stór og **VPO** (í þessu tilfelli 4 bitar)  
 ![sýndarminni](pics/syndarminni.excalidraw.png)  
-ef við setjum sýndar
+
+annað dæmi, við erum með sýndarminni sem er 4kb að stærð, 4-vítt, `E`, og með 16 mengi, `S`,  svo útfrá þessum tölum finnum við línustærð, `B`, með reikningnum $\frac{4096}{16\times4}=64$  
+skiptum þessu nú upp fyrir 32-bita vistfang:  
+![minnisskipting 2](pics/skipting.excalidraw.png)
+
+## klukkutifsformúla
+$a + s \times r = m$  
+- aðgangstími = $a$ (tif)
+- smellahlutfall = $s$ (hlutfall)
+- smellarefsing = $r$ (tif)
+- meðalaðganstími = $m$ (tif)  
+  
+dæmi: 
+- 97% smellahlutfall, $1 + 0.03 \times 100 = 4$
+- 99% smellahlutfall, $1 + 0.01 \times 100 = 2$

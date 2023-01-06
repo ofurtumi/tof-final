@@ -1,5 +1,18 @@
 TÖL309G tölvutækni og forritun - lokapróf 2020
 ---
+ætla fara í gegnum gömul próf og reyna að svara öllu, ég vísa stundum í forrit til þess að prufa útkomur úr gefnum föllum
+# dæmi um keyrslu
+```bash
+# þýða
+gcc progs/s1.2020.c -o progs/s1.2020
+
+#keyra
+progs/s1.2020       # keyrir með "default" gildi, held það sé 146
+
+#eða
+
+progs/s1.2020 3     # keyrir með n = 3
+```
 
 # 1
 > hér fyrir neðan er fallið hmm sem ákvarðar hvort það séu tveir samliggjandi (adjacent) 0 bitar í inntakinu
@@ -214,7 +227,7 @@ hinsvegar ef verið er að vinna með gögn þar sem einhverjar útkomur eru lí
 > hver er línustærð skyndiminnis
 
 ## b.
-> segjum að tölvukerfið hafi 32-vita vistföng. sýnið skiptingu þess í merkishluta (tag, CT), mengisnúmer (set index, CI) og línuhliðrun (block offeset, CO). rökstyðjið svar ykkar!
+> segjum að tölvukerfið hafi 32-bita vistföng. sýnið skiptingu þess í merkishluta (tag, CT), mengisnúmer (set index, CI) og línuhliðrun (block offeset, CO). rökstyðjið svar ykkar!
 
 ## c. 
 > segjum að flest forrit hjá okkur noti stór fylki, sem farið er línulega í gegnum. ef við gætum breytt uppsetningu skyndiminnis hér að ofan, **án þess að breyta heildarstærð þess**,væri hagkvæmast að i) hækka víddina, ii) fjölga mengjunum eða iii) auka línustærðina? ræðið kosti þessara þriggja leiða og rökstyðjið hver þeirra væri best fyrir þessa tegund forrita
